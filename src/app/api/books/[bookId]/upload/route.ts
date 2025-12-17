@@ -33,6 +33,8 @@ export async function POST(
           access: 'public',
           contentType: file.type,
           token: process.env.BLOB_READ_WRITE_TOKEN,
+          addRandomSuffix: false,
+          allowOverwrite: true,
         });
         return {
           filename: file.name,

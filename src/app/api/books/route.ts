@@ -110,6 +110,8 @@ export async function POST(request: NextRequest) {
       access: 'public',
       contentType: 'application/json',
       token,
+      addRandomSuffix: false,
+      allowOverwrite: true,
     });
 
     return NextResponse.json({ success: true, manifest, url: blob.url });

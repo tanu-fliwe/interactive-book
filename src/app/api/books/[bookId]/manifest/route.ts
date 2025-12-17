@@ -28,6 +28,8 @@ export async function POST(
       access: 'public',
       contentType: 'application/json',
       token: process.env.BLOB_READ_WRITE_TOKEN,
+      addRandomSuffix: false,
+      allowOverwrite: true,
     });
 
     return NextResponse.json({ success: true, url: blob.url });
