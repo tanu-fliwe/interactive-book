@@ -100,14 +100,26 @@ export default function FlipbookDemo() {
               ref={bookRef}
               width={520}
               height={680}
+              style={{ margin: "0 auto" }}
+              startPage={0}
               size="stretch"
               minWidth={320}
               maxWidth={900}
               minHeight={420}
               maxHeight={1100}
+              drawShadow={true}
+              flippingTime={800}
+              usePortrait={true}
+              startZIndex={0}
+              autoSize={true}
               maxShadowOpacity={0.2}
               showCover={true}
               mobileScrollSupport={true}
+              clickEventForward={true}
+              useMouseEvents={true}
+              swipeDistance={30}
+              showPageCorners={true}
+              disableFlipByClick={false}
               className="text-black"
             >
               {pages.map((p) => (
@@ -133,11 +145,3 @@ export default function FlipbookDemo() {
                     }
                   />
                 </div>
-              ))}
-            </HTMLFlipBook>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
