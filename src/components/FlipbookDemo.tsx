@@ -7,6 +7,7 @@ const HTMLFlipBook = dynamic(async () => (await import("react-pageflip")).defaul
   ssr: false,
 });
 
+const FlipBook: any = HTMLFlipBook;
 type OverlayRect = { x: number; y: number; w: number; h: number };
 
 const PhaserOverlay = dynamic(() => import("./PhaserOverlayDemo"), { ssr: false });
@@ -92,7 +93,7 @@ export default function FlipbookDemo() {
 
         <div className="mt-6 flex justify-center">
           <div className="rounded-2xl bg-white p-3 shadow-2xl">
-            <HTMLFlipBook
+            <FlipBook
               // @ts-ignore
               ref={bookRef}
               width={520}
@@ -130,7 +131,7 @@ export default function FlipbookDemo() {
                   }
                 />
               ))}
-            </HTMLFlipBook>
+            </FlipBook>
           </div>
         </div>
       </div>
