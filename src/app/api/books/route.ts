@@ -7,6 +7,7 @@ export async function GET() {
   try {
     const { blobs } = await list({
       prefix: 'books/',
+      token: process.env.BLOB_READ_WRITE_TOKEN,
     });
 
     // Filter for manifest.json files
@@ -65,7 +66,10 @@ export async function POST(request: NextRequest) {
     let existingManifest: BookManifest | null = null;
 
     try {
-      const { blobs } = await list({ prefix: manifestPath });
+      const { blobs } = await list({
+        prefix: manifestPath,
+        token: process.env.BLOB_READ_WRITE_TOKEN,
+      });
       if (blobs.length > 0) {
         const response = await fetch(blobs[0].url);
         existingManifest = await response.json();
@@ -92,6 +96,7 @@ export async function POST(request: NextRequest) {
     const blob = await put(manifestPath, JSON.stringify(manifest, null, 2), {
       access: 'public',
       contentType: 'application/json',
+      token: process.env.BLOB_READ_WRITE_TOKEN,
     });
 
     return NextResponse.json({ success: true, manifest, url: blob.url });

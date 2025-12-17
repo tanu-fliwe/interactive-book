@@ -11,7 +11,10 @@ export async function GET(
     const { bookId } = await params;
     const manifestPath = `books/${bookId}/manifest.json`;
 
-    const { blobs } = await list({ prefix: manifestPath });
+    const { blobs } = await list({
+      prefix: manifestPath,
+      token: process.env.BLOB_READ_WRITE_TOKEN,
+    });
 
     if (blobs.length === 0) {
       return NextResponse.json({ error: 'Book not found' }, { status: 404 });
@@ -40,10 +43,17 @@ export async function DELETE(
     const bookPrefix = `books/${bookId}/`;
 
     // List all blobs for this book
-    const { blobs } = await list({ prefix: bookPrefix });
+    const { blobs } = await list({
+      prefix: bookPrefix,
+      token: process.env.BLOB_READ_WRITE_TOKEN,
+    });
 
     // Delete all blobs
-    await Promise.all(blobs.map((blob) => del(blob.url)));
+    await Promise.all(
+      blobs.map((blob) =>
+        del(blob.url, { token: process.env.BLOB_READ_WRITE_TOKEN })
+      )
+    );
 
     return NextResponse.json({ success: true });
   } catch (error) {

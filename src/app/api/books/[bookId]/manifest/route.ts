@@ -27,6 +27,7 @@ export async function POST(
     const blob = await put(manifestPath, JSON.stringify(manifest, null, 2), {
       access: 'public',
       contentType: 'application/json',
+      token: process.env.BLOB_READ_WRITE_TOKEN,
     });
 
     return NextResponse.json({ success: true, url: blob.url });
