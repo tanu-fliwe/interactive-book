@@ -5,9 +5,12 @@ import { BookManifest, BookMetadata } from '@/types/book';
 // GET /api/books - List all books
 export async function GET() {
   try {
+    const token = process.env.BLOB_READ_WRITE_TOKEN;
+    console.log('[DEBUG] Token available:', !!token, 'Length:', token?.length);
+
     const { blobs } = await list({
       prefix: 'books/',
-      token: process.env.BLOB_READ_WRITE_TOKEN,
+      token,
     });
 
     // Filter for manifest.json files
@@ -51,6 +54,9 @@ export async function GET() {
 // POST /api/books - Create/update book metadata
 export async function POST(request: NextRequest) {
   try {
+    const token = process.env.BLOB_READ_WRITE_TOKEN;
+    console.log('[DEBUG POST] Token available:', !!token, 'Length:', token?.length);
+
     const body = await request.json();
     const { bookId, title, grade, lessonName } = body;
 
@@ -61,6 +67,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    if (!token) {
+      return NextResponse.json(
+        { error: 'Server configuration error: BLOB_READ_WRITE_TOKEN not set' },
+        { status: 500 }
+      );
+    }
+
     // Check if book already exists
     const manifestPath = `books/${bookId}/manifest.json`;
     let existingManifest: BookManifest | null = null;
@@ -68,7 +81,7 @@ export async function POST(request: NextRequest) {
     try {
       const { blobs } = await list({
         prefix: manifestPath,
-        token: process.env.BLOB_READ_WRITE_TOKEN,
+        token,
       });
       if (blobs.length > 0) {
         const response = await fetch(blobs[0].url);
@@ -96,7 +109,7 @@ export async function POST(request: NextRequest) {
     const blob = await put(manifestPath, JSON.stringify(manifest, null, 2), {
       access: 'public',
       contentType: 'application/json',
-      token: process.env.BLOB_READ_WRITE_TOKEN,
+      token,
     });
 
     return NextResponse.json({ success: true, manifest, url: blob.url });
